@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nanum+Gothic&family=Noto+Sans+KR:wght@100..900&display=swap');
+
+        body{
+            overflow-x: hidden;
+            padding-top:75px;
+            font-family: "Gowun Dodum", sans-serif;
+        }
+
+        nav{
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            top:0;
+            left:0;
+            right:0;
+            font-family: "Gowun Dodum", sans-serif;
+        }
+
+        a{
+            font-family: "Gowun Dodum", sans-serif;
+        }
+
+        .buttonbox{
+            text-align: right;
+            background-color: rgb(225, 225, 225);
+            padding: 3px 10px;
+            display: flex;
+            justify-content: end;
+        }
+
+        .buttonbox button{
+            background-color: rgba(0,0,0,0);
+            border: 1px solid rgb(65, 65, 65);
+            border-radius: 7px;
+            margin: 0px 5px;
+            color: black;
+            font-family: "Gowun Dodum", sans-serif;
+        }
+
+        .buttonbox a{
+            text-decoration: none;
+            color: black;
+            font-size: 13px;
+            padding: 5px 5px;
+        }
+
+        #logo{
+            background-color: rgb(255, 255, 255);
+            width: 100%;
+        }
+
+        #logo a{
+            color: black;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        #smallwrd{
+            font-size: 12px;
+        }
+
+        #bigwrd{
+            font-size: 30px;
+            font-weight: 700;
+            color: rgb(109, 1, 163);
+        }
+
+        #loginForm{
+            text-align: center;
+            line-height: 40px;
+        }
+
+        button a{
+            text-decoration: none;
+            color: black;
+            margin-top: 30px;
+        }
+
+        #add{
+            font-family: "Gowun Dodum", sans-serif;
+        }
+
+        #remove{
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<header>
+    <nav>
+        <div class="buttonbox">
+            <button id="log-in"><a href="login_page.html">로그인</a></button>
+            <button id="sign-up"><a href=signup_page.html>회원가입</a></button>
+            <a href="login_page.html"><div id="welcomeMessage"></div></a>
+            <button id="remove" style="display: none;">로그아웃</button>
+        </div>
+        <div id="logo"><a href="main_page.html"><span id="smallwrd">내가 쓰고 싶어서 만든</span><span id="bigwrd">   Todo list</span></a></div>
+    </nav>
+</header>
+
+<body>
+    <button type="button"><a href="main_page.html">홈으로 가기</a></button>
+    <div id="loginForm">
+        <h2>로그인</h2>
+        <input type="text" id="loginUsername" placeholder="아이디 입력" /><br>
+        <input type="password" id="loginPassword" placeholder="비밀번호 입력" /><br>
+        <button id="add">로그인</button><br>
+        <button type="button"><a href="signup_page.html">회원가입</a></button>
+    </div>
+
+
+    <script>
+        const btnmessage= document.getElementById("buttonbox");
+        const btnAdd = document.getElementById("add");
+        const btnRemove = document.getElementById("remove");
+        const loginForm = document.getElementById("loginForm");
+        const welcomeMessage=document.getElementById("welcomeMessage");
+
+        function updateUI(isLoggedIn, username = '') {
+            if (isLoggedIn) {
+                loginForm.style.display = 'none';
+                btnRemove.style.display = 'block';
+                btnmessage.innerText=username+'님 환영합니다';
+            } else {
+                loginForm.style.display = 'block';
+                btnRemove.style.display = 'none';
+            }
+        }
+
+        btnAdd.addEventListener("click", () => {
+            const inputUsername = document.getElementById("loginUsername").value;
+            const inputPassword = document.getElementById("loginPassword").value;
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.username === inputUsername && user.password === inputPassword);
+
+            document.getElementById('log-in').style.display = 'none';
+            document.getElementById('sign-up').style.display = 'none';
+            welcomeMessage.style.display = 'block';
+
+            if (user) {
+                localStorage.setItem('username', user.username);
+                localStorage.setItem('isLoggedIn', 'true');
+                updateUI(true, user.username);
+                window.location.assign("WP2_2314833_박다은_main.html");
+            } else {
+                alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+            }
+        });
+
+
+
+        btnRemove.addEventListener("click", () => {
+            localStorage.removeItem('username');
+            localStorage.removeItem('isLoggedIn');
+            document.getElementById('log-in').style.display = 'block';
+            document.getElementById('sign-up').style.display = 'block';
+            welcomeMessage.style.display='none';
+            updateUI(false);
+        });
+
+        window.onload = () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const username = localStorage.getItem('username');
+            if (isLoggedIn && username) {
+                const welcomeMessage = document.getElementById('welcomeMessage');
+                welcomeMessage.innerText = username + '님 환영합니다!';
+                document.getElementById('log-in').style.display = 'none';
+                document.getElementById('sign-up').style.display = 'none';
+                btnRemove.style.display='block';
+            } else {
+                document.getElementById('log-in').style.display = 'block';
+                document.getElementById('sign-up').style.display = 'block';
+            }
+        };
+    </script>
+</body>
