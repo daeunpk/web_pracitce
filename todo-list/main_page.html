@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>main-page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nanum+Gothic&family=Noto+Sans+KR:wght@100..900&display=swap');
+
+        body{
+            overflow-x: hidden;
+            padding-top:75px;
+            font-family: "Gowun Dodum", sans-serif;
+        }
+
+        nav{
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            top:0;
+            left:0;
+            right:0;
+            font-family: "Gowun Dodum", sans-serif;
+        }
+
+        a{
+            font-family: "Gowun Dodum", sans-serif;
+        }
+
+        .buttonbox{
+            text-align: right;
+            background-color: rgb(225, 225, 225);
+            padding: 3px 10px;
+            display: flex;
+            justify-content: end;
+        }
+
+        .buttonbox button{
+            background-color: rgba(0,0,0,0);
+            border: 1px solid rgb(65, 65, 65);
+            border-radius: 7px;
+            margin: 0px 5px;
+            color: white;
+        }
+
+        .buttonbox a{
+            text-decoration: none;
+            color: black;
+            font-size: 13px;
+            padding: 5px 5px;
+        }
+
+        #logo{
+            background-color: rgb(255, 255, 255);
+            width: 100%;
+        }
+
+        #logo a{
+            color: black;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        #smallwrd{
+            font-size: 12px;
+        }
+
+        #bigwrd{
+            font-size: 30px;
+            font-weight: 700;
+            color: rgb(109, 1, 163);
+        }
+
+        .carousel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .carousel-view {
+            width: 100vw;
+            height: 100vw;
+            border-radius: 7px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            width: 100vw;
+            height: 100vw;
+            display: flex;
+            justify-content: center;
+            font-size: 14px;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .control-btn {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0px;
+            font-family: "Gowun Dodum", sans-serif;
+        }
+
+        #firstbtn{
+            height: 70px;
+            width: 70px;
+            margin: 0px 50px;
+            background-color: lightblue;
+            border:none;
+            border-radius: 100%;
+            cursor: pointer;
+            color:white;
+        }
+
+        #secondbtn{
+            height: 70px;
+            width: 70px;
+            margin: 0px 50px;
+            background-color: lightcoral;
+            border:none;
+            border-radius: 100%;
+            cursor: pointer;
+            color:white;
+        }
+
+        #thirdbtn{
+            height: 70px;
+            width: 70px;
+            margin: 0px 50px;
+            background-color: lightpink;
+            border:none;
+            border-radius: 100%;
+            cursor: pointer;
+            color:white;
+        }
+    </style>
+    </head>
+
+<header>
+    <nav>
+        <div class="buttonbox">
+            <button id="log-in"><a href="login_page.html">로그인</a></button>
+            <button id="sign-up"><a href=signup_page.html>회원가입</a></button>
+            <a href="login_page.html"><div id="welcomeMessage"></div></a>
+        </div>
+        <div id="logo"><a href="main_page.html"><span id="smallwrd">내가 쓰고 싶어서 만든</span><span id="bigwrd">   Todo list</span></a></div>
+    </nav>
+</header>
+
+<body>
+    <div class="carousel">
+        <div class="carousel-control">
+            <button class="control-btn" id="firstbtn">calender</button>
+            <button class="control-btn" id="secondbtn">todo list</button>
+            <button class="control-btn" id="thirdbtn">playlist</button>
+        </div>
+
+        <div class="carousel-view">
+            <div class="carousel-container">
+                <div class="carousel-slide"><iframe src="sub_page1.html" width="100%" height="100%" frameborder="0"></iframe></div>
+                <div class="carousel-slide"><iframe src="sub_page2.html" width="100%" height="100%" frameborder="0"></iframe></div>
+                <div class="carousel-slide"><iframe src="sub_page3.html" width="100%" height="100%" frameborder="0"></iframe></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.carousel-slide');
+        const totalPages = slides.length;
+
+        slides.forEach((slide, index) => {
+            slide.style.transform = `translateX(${index * 100}%)`;
+        });
+
+        function goToSlide(pageIndex) {
+            slides.forEach((slide, index) => {
+                const offset = (index - pageIndex) * 100;
+                slide.style.transform = `translateX(${offset}%)`;
+            });
+        }
+
+        document.getElementById('firstbtn').addEventListener('click', () => {
+            goToSlide(0);
+        });
+
+        document.getElementById('secondbtn').addEventListener('click', () => {
+            goToSlide(1);
+        });
+
+        document.getElementById('thirdbtn').addEventListener('click', () => {
+            goToSlide(2);
+        });
+
+        window.onload = () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn')==='true';
+            const username = localStorage.getItem('username');
+            if (isLoggedIn && username) {
+                const welcomeMessage = document.getElementById('welcomeMessage');
+                welcomeMessage.innerText = username + '님 환영합니다!';
+                document.getElementById('log-in').style.display = 'none';
+                document.getElementById('sign-up').style.display = 'none';
+            } else {
+                document.getElementById('log-in').style.display = 'block';
+                document.getElementById('sign-up').style.display = 'block';
+            }
+        };
+    </script>
+</body>
